@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Sudowrite Writing Streak Tracker</title>
+<style>
+:root{
+--bg:#0f172a;
+--card:#1e293b;
+--line:#334155;
+--text:#f8fafc;
+--muted:#94a3b8;
+--accent:#22c55e;
+}
+*{box-sizing:border-box}
+body{
+margin:0;
+font-family:Arial,Helvetica,sans-serif;
+background:var(--bg);
+color:var(--text);
+display:flex;
+flex-direction:column;
+align-items:center;
+padding:24px;
+min-height:100vh;
+}
+.card{
+max-width:460px;
+width:100%;
+background:var(--card);
+border:1px solid var(--line);
+border-radius:16px;
+padding:24px;
+text-align:center;
+}
+h1{margin-bottom:8px}
+p{color:var(--muted)}
+.stats{
+display:flex;
+gap:12px;
+margin:20px 0;
+}
+.stat{
+flex:1;
+padding:16px;
+border:1px solid var(--line);
+border-radius:10px;
+}
+.value{
+font-size:32px;
+font-weight:bold;
+}
+button{
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+font-weight:bold;
+cursor:pointer;
+background:var(--accent);
+margin-top:10px;
+}
+.cta{
+display:block;
+margin-top:20px;
+padding:14px;
+background:#facc15;
+color:#000;
+text-decoration:none;
+border-radius:10px;
+font-weight:bold;
+}
+footer{
+margin-top:24px;
+font-size:12px;
+color:var(--muted);
+text-align:center;
+}
+</style>
+</head>
+<body>
+
+<div class="card">
+<h1>✍️ Sudowrite Writing Streak</h1>
+<p>Track your daily writing sessions and build consistency.</p>
+
+<div class="stats">
+<div class="stat">
+<div>🔥 Streak</div>
+<div class="value" id="streak">0</div>
+</div>
+<div class="stat">
+<div>📝 Sessions</div>
+<div class="value" id="sessions">0</div>
+</div>
+</div>
+
+<button onclick="logWriting()">Log Today's Writing Session</button>
+<button onclick="resetData()">Reset Progress</button>
+
+<a class="cta" href="https://sudowrite.com/?partner=affmaven&partner_amount=200000?via=affinco" target="_blank" rel="noopener sponsored">
+🎁 Get Sudowrite - Save Up To 50%
+</a>
+</div>
+
+<footer>
+This page contains an affiliate link. We may earn a commission at no extra cost to you.
+Not affiliated with or endorsed by Sudowrite.
+</footer>
+
+<script>
+let streak=parseInt(localStorage.getItem('sw_streak')||0);
+let sessions=parseInt(localStorage.getItem('sw_sessions')||0);
+let lastDate=localStorage.getItem('sw_last');
+
+function render(){
+document.getElementById('streak').textContent=streak;
+document.getElementById('sessions').textContent=sessions;
+}
+
+function logWriting(){
+const today=new Date().toDateString();
+
+if(lastDate===today) return;
+
+if(lastDate){
+const prev=new Date(lastDate);
+const diff=Math.round((new Date(today)-prev)/86400000);
+if(diff===1){streak++;}
+else{streak=1;}
+}else{
+streak=1;
+}
+
+sessions++;
+lastDate=today;
+
+localStorage.setItem('sw_streak',streak);
+localStorage.setItem('sw_sessions',sessions);
+localStorage.setItem('sw_last',lastDate);
+
+render();
+}
+
+function resetData(){
+if(confirm('Reset writing progress?')){
+localStorage.clear();
+streak=0;
+sessions=0;
+lastDate=null;
+render();
+}
+}
+
+render();
+</script>
+
+</body>
+</html>
